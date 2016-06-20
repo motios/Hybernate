@@ -1,69 +1,41 @@
 package springboot.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import springboot.dao.StudentRepository;
+import org.springframework.stereotype.Service;
+import springboot.dto.StudentDto;
 import springboot.model.Student;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by We on 20.06.2016.
  */
-public abstract class StudentService  implements StudentRepository{
-    @Override
-    public Page<Student> findAll(Pageable pageable) {
+@Service
+public class StudentService  {
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+
+    public List<StudentDto> getAllStudents() {
+        Iterable<Student> students=  studentRepository.findAll();
+        List<StudentDto> studentsDto= new ArrayList<StudentDto>();
+        students.forEach(student->{ studentsDto.add(studentToDto(student)); });
+        return studentsDto;
+    }
+
+    public StudentDto getStudentById(long id) {
+        return studentToDto(studentRepository.findOne(id));
+    }
+
+    //serialize model
+    private StudentDto studentToDto(Student student){
+        if(student!=null){
+            return new StudentDto(student.getId(),student.getName(),student.getGender(),student.getStudentId(),student.getAverage());
+        }
         return null;
-    }
-
-    @Override
-    public Student findByUnikey(@Param("id") int id) {
-        return null;
-    }
-
-
-
-    @Override
-    public Student findOne(Long aLong) {
-        return null;
-    }
-
-    @Override
-    public boolean exists(Long aLong) {
-        return false;
-    }
-
-    @Override
-    public Iterable<Student> findAll() {
-        return null;
-    }
-
-    @Override
-    public Iterable<Student> findAll(Iterable<Long> longs) {
-        return null;
-    }
-
-    @Override
-    public long count() {
-        return 0;
-    }
-
-    @Override
-    public void delete(Long aLong) {
-
-    }
-
-    @Override
-    public void delete(Student entity) {
-
-    }
-
-    @Override
-    public void delete(Iterable<? extends Student> entities) {
-
-    }
-
-    @Override
-    public void deleteAll() {
 
     }
 }
