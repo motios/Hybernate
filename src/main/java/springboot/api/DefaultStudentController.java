@@ -25,7 +25,7 @@ public class DefaultStudentController {
 	@RequestMapping(value="/students", method = RequestMethod.GET)
 	public List<StudentDto> allStudents(HttpServletRequest request){
 		try {
-			//repository.save(new Student("test4", "woman", 147258369, 95.30));
+			repository.save(new Student("test5", "woman", 147258369, 95.30));
 			/*long k = 3;
 			dao.delete(k);*/
 			//return repository.findAll();
@@ -41,9 +41,9 @@ public class DefaultStudentController {
 		return repository.findByUnikey(id);
 	}
 
-	@RequestMapping("/students/{student_id}")
-	public Student oneStudent(@PathVariable("student_id") Long id,
+	@RequestMapping(value="/students/{student_id}", method = RequestMethod.GET)
+	public StudentDto getStudentById(@PathVariable("student_id") Long id,
 							  HttpServletRequest request){
-		return null;//repository.findByUnikey(id);
+		return studentService.getStudentById(id);
 	}
 }

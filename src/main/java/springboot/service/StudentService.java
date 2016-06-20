@@ -18,7 +18,7 @@ public class StudentService  {
     @Autowired
     private StudentRepository studentRepository;
 
-
+    //return List StudentDto
     public List<StudentDto> getAllStudents() {
         Iterable<Student> students=  studentRepository.findAll();
         List<StudentDto> studentsDto= new ArrayList<StudentDto>();
@@ -26,6 +26,7 @@ public class StudentService  {
         return studentsDto;
     }
 
+    //return studentDto
     public StudentDto getStudentById(long id) {
         return studentToDto(studentRepository.findOne(id));
     }
