@@ -44,7 +44,7 @@ public class StudentService  {
     //TODO Moti need complite check id;
     private Student studentToDto(StudentDto studentDto){
         if(studentDto!=null){
-            return new Student(studentDto.getId(),studentDto.getName(),studentDto.getGender(),studentDto.getStudentId(),studentDto.getAverage());
+            //return new Student(studentDto.getId(),studentDto.getName(),studentDto.getGender(),studentDto.getStudentId(),studentDto.getAverage());
         }
         return null;
 
