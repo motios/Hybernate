@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springboot.dto.ResponseDto;
 import springboot.dto.StudentDto;
 import springboot.model.Student;
 
@@ -21,9 +22,9 @@ public class DefaultStudentController {
 	@Autowired
 	private StudentService studentService;
 
-	/// http://localhost:8080/allCustomers
+	/// http://localhost:8080/students
 	@RequestMapping(value="/students", method = RequestMethod.GET)
-	public List<StudentDto> allStudents(HttpServletRequest request){
+	public ResponseDto allStudents(HttpServletRequest request){
 		try {
 			repository.save(new Student("test5", "woman", 147258369, 95.30));
 			/*long k = 3;
@@ -35,14 +36,10 @@ public class DefaultStudentController {
 			return null;
 		}
 	}
-	
-	@RequestMapping("/allCustomers/{id}")
-	public Student oneCustomer(@PathVariable("id") int id){
-		return repository.findByUnikey(id);
-	}
+
 
 	@RequestMapping(value="/students/{student_id}", method = RequestMethod.GET)
-	public StudentDto getStudentById(@PathVariable("student_id") Long id,
+	public ResponseDto getStudentById(@PathVariable("student_id") Long id,
 							  HttpServletRequest request){
 		return studentService.getStudentById(id);
 	}

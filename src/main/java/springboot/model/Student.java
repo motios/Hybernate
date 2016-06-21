@@ -2,18 +2,27 @@ package springboot.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "students")
+@NamedQueries({
+        @NamedQuery(
+                name = Student.QUERY_GET_ALL,
+                query = "select s from Student s"
+        ),
+        @NamedQuery(
+                name = Student.QUERY_STUDENT_FILTER_BY_STUDENT_ID,
+                query = "select s from Student s where "+Student.FIELD_STUDENT_ID + "=:" +Student.PARAM_STUDENT_ID
+        )
+})
 public class Student implements Serializable {
 	private static final long serialVersionUID = 1L;
+    public static final String QUERY_GET_ALL = "student.getAll";
+    public static final String QUERY_STUDENT_FILTER_BY_STUDENT_ID = "student.FilterByStudentId";
+    public static final String FIELD_STUDENT_ID = "field_student_id";
+    public static final String PARAM_STUDENT_ID = "param_student_id";
+    public static final int maxStudents=1000;
 
     //region fields
 	@Id

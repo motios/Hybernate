@@ -13,5 +13,6 @@ public interface StudentRepository extends CrudRepository<Student, Long> {
   Page<Student> findAll(Pageable pageable);
   
   @Query("SELECT c FROM Student c WHERE c.id=:id")
+
   Student findByUnikey(@Param("id") int id);
 }
