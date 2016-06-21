@@ -16,7 +16,7 @@ public interface StudentRepository extends CrudRepository<Student, Long> {
   
   @Query("SELECT c FROM Student c WHERE c.id=:id")*/
 
-  Student findByKey(@Param("id") int id);
+  //Student findByKey(@Param("id") int id);
 
   Student getStudentByStudentId(long student_id);
 }

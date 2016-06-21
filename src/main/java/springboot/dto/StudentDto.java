@@ -13,12 +13,17 @@ public class StudentDto implements Serializable{
     private long studentId;
     private double average;
 
-    public StudentDto(long id, String name, String gender, long studentId, double average) {
-        this.id = id;
+    public StudentDto(String name, String gender, long studentId, double average) {
+        this.id = 0;
         this.name = name;
         this.gender = gender;
         this.studentId = studentId;
         this.average = average;
+    }
+    public StudentDto(long id, String name, String gender, long studentId, double average) {
+        this(name,gender,studentId,average);
+        this.id = id;
+
     }
 
     public long getId() {

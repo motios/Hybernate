@@ -9,6 +9,7 @@ import springboot.enums.StudentGender;
 import springboot.init.InitJson;
 import springboot.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import springboot.util.ArgumentValidationHelper;
 import springboot.util.StringHelper;
 
 import java.util.ArrayList;
@@ -50,6 +51,71 @@ public class StudentService  {
         return responseDto;
     }
 
+    /*
+     * insert default students to database exclude ixisting by studentID(teudat zehut)
+     * return response Dto
+     * */
+    public ResponseDto setDefaultStudents() {
+        List<Student> students = InitJson.getStudents();
+        students.forEach(student -> {
+            //check if not student exist and studentId is valid
+            if(!studentExistValidate(student.getStudentId()) ){
+                studentRepository.save(student);
+            }
+        });
+        ResponseDto responseDto=new ResponseDto(HttpStatus.OK,StringHelper.RESPONSE_REASON_SET_DEFAULT_STUDENTS);
+        return responseDto;
+    }
+
+
+    //create student by unique studentID(9 digits)
+    public ResponseDto createStudent(StudentDto studentDto){
+        ResponseDto responseDto = new ResponseDto();
+        if(!studentExistValidate(studentDto.getStudentId())){
+            Student student = studentDtoToStudent(studentDto);
+            if(student!=null ){
+                try {
+                    studentRepository.save(student);
+                }
+                catch (Exception e){
+                    responseDto.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+                    responseDto.setReason(e.getMessage());
+                    return responseDto;
+                }
+                //create and get ok
+                if(!getStudentById(student.getStudentId()).getStudents().isEmpty()){
+                    responseDto.setHttpStatus(HttpStatus.CREATED);
+                    responseDto.setReason(String.format(StringHelper.RESPONSE_REASON_STUDENT_CREATED,student.getStudentId()));
+                    return responseDto;
+                }
+                //create but not get without exceptions
+                responseDto.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+                responseDto.setReason(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+                return responseDto;
+            }
+            //student is exist
+            responseDto.setHttpStatus(HttpStatus.CONFLICT);
+            responseDto.setReason(String.format(StringHelper.RESPONSE_REASON_EXIST,studentDto.getStudentId()));
+            return responseDto;
+        }
+        //student id is not valid
+        responseDto.setHttpStatus(HttpStatus.CONFLICT);
+        responseDto.setReason(String.format(StringHelper.RESPONSE_REASON_STUDENT_ID_NOT_VALID,studentDto.getStudentId()));
+        return responseDto;
+    }
+
+    //count of students
+    public ResponseDto getStudentsCount() {
+        ResponseDto responseDto=new ResponseDto(HttpStatus.OK,HttpStatus.OK.getReasonPhrase());
+        responseDto.setStudentsCounter(studentRepository.count());
+        return responseDto;
+    }
+
+    //if student(model and dto) not exist and studentId is valid return false
+    private boolean studentExistValidate(long studentId){
+        return !(ArgumentValidationHelper.studentIdValidate(studentId) && getStudentById(studentId).getStudents().isEmpty());
+    }
+
     //serialize model
     private StudentDto studentToDto(Student student){
         if(student!=null){
@@ -60,30 +126,13 @@ public class StudentService  {
     }
 
     //deserialize model
-    //TODO Moti need complite check id;
-    private Student studentToDto(StudentDto studentDto){
-        if(studentDto!=null && studentDto.getGender()!= null && studentDto.getGender().length()>0 && StudentGender.contains(studentDto.getGender())){
+    private Student studentDtoToStudent(StudentDto studentDto){
+        if((studentDto!=null && studentDto.getGender()!= null) &&(studentDto.getGender().length()==0 ||  studentDto.getGender().length()>0 && StudentGender.contains(studentDto.getGender()))){
             return new Student(studentDto.getName(),studentDto.getGender(),studentDto.getStudentId(),studentDto.getAverage());
         }
         return null;
 
     }
 
-    //return List StudentDto
-    public ResponseDto setDefaultStudents() {
-        List<Student> students = InitJson.getStudents();
-        students.forEach(student -> {
-            if(getStudentById(student.getStudentId())==null){
 
-            }
-        });
-
-
-        List<StudentDto> studentsDto= new ArrayList<StudentDto>();
-        students.forEach(student->{ studentsDto.add(studentToDto(student)); });
-        HttpStatus httpStatus = students!=null ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
-
-        ResponseDto responseDto=new ResponseDto(httpStatus,studentsDto,httpStatus.getReasonPhrase());
-        return responseDto;
-    }
 }

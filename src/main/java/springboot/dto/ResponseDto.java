@@ -16,11 +16,14 @@ public class ResponseDto implements Serializable {
     private HttpStatus httpStatus;
     private List<StudentDto> students;
     private String reason;
+    private long studentsCounter;
     //endregion //fields
 
     //region Constructor
     public ResponseDto() {
+
         students = new ArrayList<>();
+        setStudentsCounter(0);
     }
 
     public ResponseDto(HttpStatus httpStatus,  String reason) {
@@ -33,6 +36,11 @@ public class ResponseDto implements Serializable {
     public ResponseDto(HttpStatus httpStatus, List<StudentDto> students, String reason) {
         this(httpStatus,reason);
         this.setStudents(students);
+    }
+
+    public ResponseDto(int studentsCounter, HttpStatus httpStatus, List<StudentDto> students, String reason) {
+        this(httpStatus,students,reason);
+        this.reason = reason;
     }
 
     //endregion //Constructor
@@ -66,6 +74,13 @@ public class ResponseDto implements Serializable {
         this.reason = reason;
     }
 
+    public long getStudentsCounter() {
+        return studentsCounter;
+    }
+
+    public void setStudentsCounter(long studentsCounter) {
+        this.studentsCounter = studentsCounter;
+    }
 
 
     //endregion getters-seeters
