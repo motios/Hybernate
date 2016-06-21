@@ -47,12 +47,19 @@ public class Student implements Serializable {
     //region Constructor
     public Student() {
     }
+
     public Student(String name, String gender, long studentId, double average) {
         this.name = name;
         this.gender = gender;
         this.studentId = studentId;
         this.average = average;
     }
+
+    public Student(String name, String gender, long studentId, double average, long id) {
+        this(name, gender, studentId, average);
+        this.id=id;
+    }
+
     //endregion //Constructor
 
     //region getter-setter
@@ -91,6 +98,11 @@ public class Student implements Serializable {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     //endregion //getter-setter
 
     //region equals
